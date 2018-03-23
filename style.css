@@ -17,11 +17,11 @@ div {
   border-right: 1px solid gray;
 }
 
-#one .arm, #one .body, #two .opponent .arm, #two .opponent .body {
+.one .arm, .one .body {
   background: #fd9aea;
 }
 
-#two .arm, #two .body, #one .opponent .arm, #one .opponent .body {
+.two .arm, .two .body {
   background: #9afdb1;
 }
 
@@ -30,18 +30,9 @@ div {
   bottom: 0;
 }
 
-.player.opponent {
-  top: 20vh;
-}
-
 .arm {
   width: 8vh;
   height: 30vh;
-}
-
-.opponent .arm {
-  width: 4vh;
-  height: 15vh;
 }
 
 .body {
@@ -49,7 +40,8 @@ div {
   height: 50vh;
 }
 
-.opponent .body {
-  width: 12vh;
-  height: 25vh;
+.opponent {
+  top: 0vh;
+  transform: scaleX(-0.5) scaleY(0.5);
+  z-index: -1;
 }
