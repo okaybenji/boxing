@@ -26,39 +26,30 @@ const duck = player => animation(player, `.${player} div`, 'translatey(10vh)');
 const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20vh)');
 const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
 
-const defend = player => {
-  const reallyDefend = () => {
+// Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
+const executeAfterComboKeysWindowPasses = (player, action) => {
+  const execute = () => {
     inputTimeouts[player] = undefined;
-    animation(player, `.${player} .left.arm`, 'translatey(-30vh) rotate(45deg)');
-    animation(player, `.${player} .right.arm`, 'translatey(-30vh) rotate(-45deg)');
+    action();
   };
 
-  // If player doesn't press up within the timeout period, defend.
+  // If player doesn't press up within the timeout period, defend/jab.
   clearTimeout(inputTimeouts[player]);
-  inputTimeouts[player] = setTimeout(reallyDefend, 25);
+  inputTimeouts[player] = setTimeout(execute, 25);
 };
 
-const jabLeft = player => {
-  const reallyJab = () => {
-    inputTimeouts[player] = undefined;
+const defend = player => executeAfterComboKeysWindowPasses(player, () => {
+  animation(player, `.${player} .left.arm`, 'translatey(-30vh) rotate(45deg)');
+  animation(player, `.${player} .right.arm`, 'translatey(-30vh) rotate(-45deg)');
+});
+
+const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
     animation(player, `.${player} .left`, 'translatey(-25vh)');
-  };
+});
 
-  // If player doesn't press up within the timeout period, jab.
-  clearTimeout(inputTimeouts[player]);
-  inputTimeouts[player] = setTimeout(reallyJab, 25);
-};
-
-const jabRight = player => {
-  const reallyJab = () => {
-    inputTimeouts[player] = undefined;
+const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
     animation(player, `.${player} .right`, 'translatey(-25vh)');
-  };
-
-  // If player doesn't press up within the timeout period, jab.
-  clearTimeout(inputTimeouts[player]);
-  inputTimeouts[player] = setTimeout(reallyJab, 25);
-};
+});
 
 const uppercutLeft = player => {
   clearTimeout(inputTimeouts[player]);
