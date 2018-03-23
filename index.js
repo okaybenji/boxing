@@ -2,9 +2,8 @@ const $$ = query => document.querySelectorAll(query);
 
 const keyMap = {};
 const blockInput = {one: false, two: false};
-
-// Give a window within which a player can uppercut instead of defending or jabbing.
-let inputTimeouts = {one: undefined, two: undefined};
+// Give a window during which a player can uppercut instead of defending or jabbing.
+const inputTimeouts = {one: undefined, two: undefined};
 
 const animation = (player, selector, transformation) => {
   clearTimeout(inputTimeouts[player]);
