@@ -7,7 +7,6 @@ const blockInput = {one: false, two: false};
 const block = player => {
   blockInput[player] = true;
 
-  const opponent = player === 'one' ? 'two' : 'one';
 
   const leftArms = $$(`.${player} .left.arm`);
   const rightArms = $$(`.${player} .right.arm`);
@@ -35,97 +34,34 @@ const block = player => {
   }, 500);
 };
 
-const duck = player => {
+const animation = (player, selector, transformation) => {
   blockInput[player] = true;
-
-  const opponent = player === 'one' ? 'two' : 'one';
-  const playerDivs = $$(`.${player} div`);
-
-  playerDivs.forEach(div => {
-    div.style.transform = 'translatey(10vh)';
+  const elements = $$(selector);
+  elements.forEach(el => {
+    el.style.transform = transformation;
   });
 
   setTimeout(() => {
-    playerDivs.forEach(div => {
-      div.style.transform = '';
+    elements.forEach(el => {
+      el.style.transform = '';
     });
     blockInput[player] = false;
   }, 500);
 };
 
-const dodgeLeft = player => {
-  blockInput[player] = true;
-
-  const opponent = player === 'one' ? 'two' : 'one';
-  const playerDivs = $$(`.${player} div`);
-
-  playerDivs.forEach(div => {
-    div.style.transform = 'translatex(-20vh)';
-  });
-
-  setTimeout(() => {
-    playerDivs.forEach(div => {
-      div.style.transform = '';
-    });
-    blockInput[player] = false;
-  }, 500);
+const duck = player => animation(player, `.${player} div`, 'translatey(10vh)');
+const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20vh)');
+const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
+const jabLeft = player => animation(player, `.${player} .left`, 'translatey(-25vh)');
+const jabRight = player => animation(player, `.${player} .right`, 'translatey(-25vh)');
+const uppercutLeft = player => {
+  jabLeft(player);
+  animation(player, `.${player} div`, 'translatey(-10vh)');
 };
-
-const dodgeRight = player => {
-  blockInput[player] = true;
-
-  const opponent = player === 'one' ? 'two' : 'one';
-  const playerDivs = $$(`.${player} div`);
-
-  playerDivs.forEach(div => {
-    div.style.transform = 'translatex(20vh)';
-  });
-
-  setTimeout(() => {
-    playerDivs.forEach(div => {
-      div.style.transform = '';
-    });
-    blockInput[player] = false;
-  }, 500);
-};
-
-const jabLeft = player => {
-  blockInput[player] = true;
-
-  const opponent = player === 'one' ? 'two' : 'one';
-  const leftArms = $$(`.${player} .left`);
-
-  leftArms.forEach(div => {
-    div.style.transform = 'translatey(-25vh)';
-  });
-
-  setTimeout(() => {
-    leftArms.forEach(div => {
-      div.style.transform = '';
-    });
-    blockInput[player] = false;
-  }, 500);
-};
-
-const jabRight = player => {
-  blockInput[player] = true;
-
-  const opponent = player === 'one' ? 'two' : 'one';
-  const rightArms = $$(`.${player} .right`);
-
-  rightArms.forEach(div => {
-    div.style.transform = 'translatey(-25vh)';
-  });
-
-  setTimeout(() => {
-    rightArms.forEach(div => {
-      div.style.transform = '';
-    });
-    blockInput[player] = false;
-  }, 500);
-};
-const uppercutLeft = player => { console.log(player, 'uppercutLeft')};
-const uppercutRight = player => { console.log(player, 'uppercutRight')};
+const uppercutRight = player => {
+  jabRight(player);
+  animation(player, `.${player} div`, 'translatey(-10vh)');
+}
 
 const applyKeys = () => {
   // Controls for player one.
