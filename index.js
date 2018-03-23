@@ -7,41 +7,6 @@ const blockInput = {one: false, two: false};
 // Give a window within which a player can uppercut instead of defending or jabbing.
 let inputTimeouts = {one: undefined, two: undefined};
 
-const defend = player => {
-  const reallyDefend = () => {
-    inputTimeouts[player] = undefined;
-    blockInput[player] = true;
-
-    const leftArms = $$(`.${player} .left.arm`);
-    const rightArms = $$(`.${player} .right.arm`);
-
-    leftArms.forEach(arm => {
-      arm.style.transform = 'translatey(-30vh)';
-      arm.style.transform += 'rotate(45deg)';
-    });
-
-    rightArms.forEach(arm => {
-      arm.style.transform = 'translatey(-30vh)';
-      arm.style.transform += 'rotate(-45deg)';
-    });
-
-    setTimeout(() => {
-      leftArms.forEach(arm => {
-        arm.style.transform = '';
-      });
-
-      rightArms.forEach(arm => {
-        arm.style.transform = '';
-      });
-
-      blockInput[player] = false;
-    }, 500);
-  };
-
-  // If player doesn't press up within the timeout period, defend.
-  inputTimeouts[player] = setTimeout(reallyDefend, 25);
-};
-
 const animation = (player, selector, transformation) => {
   blockInput[player] = true;
   const elements = $$(selector);
@@ -60,6 +25,17 @@ const animation = (player, selector, transformation) => {
 const duck = player => animation(player, `.${player} div`, 'translatey(10vh)');
 const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20vh)');
 const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
+
+const defend = player => {
+  const reallyDefend = () => {
+    inputTimeouts[player] = undefined;
+    animation(player, `.${player} .left.arm`, 'translatey(-30vh) rotate(45deg)');
+    animation(player, `.${player} .right.arm`, 'translatey(-30vh) rotate(-45deg)');
+  };
+
+  // If player doesn't press up within the timeout period, defend.
+  inputTimeouts[player] = setTimeout(reallyDefend, 25);
+};
 
 const jabLeft = player => {
   const reallyJab = () => {
