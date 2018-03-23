@@ -34,6 +34,7 @@ const defend = player => {
   };
 
   // If player doesn't press up within the timeout period, defend.
+  clearTimeout(inputTimeouts[player]);
   inputTimeouts[player] = setTimeout(reallyDefend, 25);
 };
 
