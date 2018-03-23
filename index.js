@@ -8,6 +8,7 @@ const blockInput = {one: false, two: false};
 let inputTimeouts = {one: undefined, two: undefined};
 
 const animation = (player, selector, transformation) => {
+  clearTimeout(inputTimeouts[player]);
   blockInput[player] = true;
   const elements = $$(selector);
   elements.forEach(el => {
@@ -52,8 +53,6 @@ const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
 });
 
 const uppercutLeft = player => {
-  clearTimeout(inputTimeouts[player]);
-
   animation(player, `.${player} div`, 'translatey(-10vh)');
 
   const leftArms = $$(`.${player} .left.arm`);
@@ -63,8 +62,6 @@ const uppercutLeft = player => {
 };
 
 const uppercutRight = player => {
-  clearTimeout(inputTimeouts[player]);
-
   animation(player, `.${player} div`, 'translatey(-10vh)');
 
   const rightArms = $$(`.${player} .right.arm`);
