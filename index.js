@@ -54,14 +54,24 @@ const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20v
 const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
 const jabLeft = player => animation(player, `.${player} .left`, 'translatey(-25vh)');
 const jabRight = player => animation(player, `.${player} .right`, 'translatey(-25vh)');
+
 const uppercutLeft = player => {
-  jabLeft(player);
   animation(player, `.${player} div`, 'translatey(-10vh)');
+
+  const leftArms = $$(`.${player} .left.arm`);
+  leftArms.forEach(arm => {
+    arm.style.transform = 'translatey(-35vh)';
+  });
 };
+
 const uppercutRight = player => {
-  jabRight(player);
   animation(player, `.${player} div`, 'translatey(-10vh)');
-}
+
+  const rightArms = $$(`.${player} .right.arm`);
+  rightArms.forEach(arm => {
+    arm.style.transform = 'translatey(-35vh)';
+  });
+};
 
 const applyKeys = () => {
   // Controls for player one.
