@@ -1,0 +1,41 @@
+main {
+  display: flex;
+}
+
+.screen {
+  height: 100vh;
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-around;
+}
+
+div {
+  display: inline-block;
+}
+
+#one {
+  border-right: 1px solid gray;
+}
+
+#one .arm, #one .body {
+  background: #fd9aea;
+}
+
+#two .arm, #two .body {
+  background: #9afdb1;
+}
+
+.player {
+  position: absolute;
+  bottom: 0;
+}
+
+.arm {
+  width: 8vh;
+  height: 30vh;
+}
+
+.body {
+  width: 24vh;
+  height: 50vh;
+}
