@@ -4,34 +4,42 @@ const $$ = query => document.querySelectorAll(query);
 const keyMap = {};
 const blockInput = {one: false, two: false};
 
-const block = player => {
-  blockInput[player] = true;
+// Give a window within which a player can uppercut instead of defending or jabbing.
+let inputTimeouts = {one: undefined, two: undefined};
 
+const defend = player => {
+  const reallyDefend = () => {
+    inputTimeouts[player] = undefined;
+    blockInput[player] = true;
 
-  const leftArms = $$(`.${player} .left.arm`);
-  const rightArms = $$(`.${player} .right.arm`);
+    const leftArms = $$(`.${player} .left.arm`);
+    const rightArms = $$(`.${player} .right.arm`);
 
-  leftArms.forEach(arm => {
-    arm.style.transform = 'translatey(-30vh)';
-    arm.style.transform += 'rotate(45deg)';
-  });
-
-  rightArms.forEach(arm => {
-    arm.style.transform = 'translatey(-30vh)';
-    arm.style.transform += 'rotate(-45deg)';
-  });
-
-  setTimeout(() => {
     leftArms.forEach(arm => {
-      arm.style.transform = '';
+      arm.style.transform = 'translatey(-30vh)';
+      arm.style.transform += 'rotate(45deg)';
     });
 
     rightArms.forEach(arm => {
-      arm.style.transform = '';
+      arm.style.transform = 'translatey(-30vh)';
+      arm.style.transform += 'rotate(-45deg)';
     });
 
-    blockInput[player] = false;
-  }, 500);
+    setTimeout(() => {
+      leftArms.forEach(arm => {
+        arm.style.transform = '';
+      });
+
+      rightArms.forEach(arm => {
+        arm.style.transform = '';
+      });
+
+      blockInput[player] = false;
+    }, 500);
+  };
+
+  // If player doesn't press up within the timeout period, defend.
+  inputTimeouts[player] = setTimeout(reallyDefend, 25);
 };
 
 const animation = (player, selector, transformation) => {
@@ -52,10 +60,32 @@ const animation = (player, selector, transformation) => {
 const duck = player => animation(player, `.${player} div`, 'translatey(10vh)');
 const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20vh)');
 const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
-const jabLeft = player => animation(player, `.${player} .left`, 'translatey(-25vh)');
-const jabRight = player => animation(player, `.${player} .right`, 'translatey(-25vh)');
+
+const jabLeft = player => {
+  const reallyJab = () => {
+    inputTimeouts[player] = undefined;
+    animation(player, `.${player} .left`, 'translatey(-25vh)');
+  };
+
+  // If player doesn't press up within the timeout period, jab.
+  clearTimeout(inputTimeouts[player]);
+  inputTimeouts[player] = setTimeout(reallyJab, 25);
+};
+
+const jabRight = player => {
+  const reallyJab = () => {
+    inputTimeouts[player] = undefined;
+    animation(player, `.${player} .right`, 'translatey(-25vh)');
+  };
+
+  // If player doesn't press up within the timeout period, jab.
+  clearTimeout(inputTimeouts[player]);
+  inputTimeouts[player] = setTimeout(reallyJab, 25);
+};
 
 const uppercutLeft = player => {
+  clearTimeout(inputTimeouts[player]);
+
   animation(player, `.${player} div`, 'translatey(-10vh)');
 
   const leftArms = $$(`.${player} .left.arm`);
@@ -65,6 +95,8 @@ const uppercutLeft = player => {
 };
 
 const uppercutRight = player => {
+  clearTimeout(inputTimeouts[player]);
+
   animation(player, `.${player} div`, 'translatey(-10vh)');
 
   const rightArms = $$(`.${player} .right.arm`);
@@ -78,7 +110,7 @@ const applyKeys = () => {
   if (!blockInput.one) {
     keyMap.f && keyMap.w ? uppercutLeft('one')
     : keyMap.g && keyMap.w ? uppercutRight('one')
-    : keyMap.w ? block('one')
+    : keyMap.w ? defend('one')
     : keyMap.a ? dodgeLeft('one')
     : keyMap.s ? duck('one')
     : keyMap.d ? dodgeRight('one')
@@ -91,7 +123,7 @@ const applyKeys = () => {
   if (!blockInput.two) {
     keyMap[`;`] && keyMap.i ? uppercutLeft('two')
     : keyMap[`'`] && keyMap.i ? uppercutRight('two')
-    : keyMap.i ? block('two')
+    : keyMap.i ? defend('two')
     : keyMap.j ? dodgeLeft('two')
     : keyMap.k ? duck('two')
     : keyMap.l ? dodgeRight('two')
