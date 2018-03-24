@@ -33,11 +33,13 @@ div {
 .arm {
   width: 8vh;
   height: 30vh;
+  transition: all 0.125s ease;
 }
 
 .body {
   width: 24vh;
   height: 50vh;
+  transition: all 0.125s ease;
 }
 
 .opponent {
