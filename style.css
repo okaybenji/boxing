@@ -28,6 +28,11 @@ div {
 .player {
   position: absolute;
   bottom: 0;
+  transition: all 0.125s ease;
+}
+
+.player.attack {
+  transform: scale(0.85);
 }
 
 .arm {
@@ -46,6 +51,11 @@ div {
   top: 0vh;
   transform: scaleX(-0.5) scaleY(0.5);
   z-index: -1;
+}
+
+.opponent.attack {
+  top: 25vh;
+  transform: scaleX(-0.75) scaleY(0.75);
 }
 
 /* Animations */
@@ -71,6 +81,10 @@ div {
 
 .jab {
   transform: translatey(-25vh);
+}
+
+.opponent .jab {
+  transform: translatey(-10vh);
 }
 
 .uppercut {
