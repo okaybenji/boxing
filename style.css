@@ -65,23 +65,23 @@ div {
 
 /* Animations */
 .duck {
-  transform: translatey(10vh);
+  transform: translateY(10vh);
 }
 
 .nudgeDown {
-  transform: translatey(5vh);
+  transform: translateY(5vh);
 }
 
 .opponent .nudgeDown {
-  transform: translatey(-5vh);
+  transform: translateY(-5vh);
 }
 
 .dodgeLeft {
-  transform: translatex(-20vh);
+  transform: translateX(-20vh);
 }
 
 .dodgeRight {
-  transform: translatex(20vh);
+  transform: translateX(20vh);
 }
 
 .defendLeft {
@@ -117,7 +117,7 @@ div {
 }
 
 .jump {
-  transform: translatey(-10vh);
+  transform: translateY(-10vh);
 }
 
 .shake {
@@ -125,7 +125,7 @@ div {
 }
 
 .knockout {
-  transform: translatey(100vh);
+  animation: knockout 0.75s ease-in normal forwards;
 }
 
 @keyframes shake {
@@ -135,4 +135,10 @@ div {
  to {
    transform: rotate(-5deg);
  }
+}
+
+@keyframes knockout {
+  to {
+    transform: translateY(100vh);
+  }
 }
