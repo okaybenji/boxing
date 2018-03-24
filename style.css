@@ -72,23 +72,35 @@ div {
 }
 
 .defendLeft {
-  transform: translatey(-30vh) rotate(45deg);
+  transform: translate(10vh, -30vh) rotate(45deg);
 }
 
 .defendRight {
-  transform: translatey(-30vh) rotate(-45deg);
+  transform: translate(-10vh, -30vh) rotate(-45deg);
 }
 
-.jab {
-  transform: translatey(-25vh);
+.jabLeft {
+  transform: translate(5vh, -25vh) rotate(20deg);;
 }
 
-.opponent .jab {
-  transform: translatey(-10vh);
+.opponent .jabLeft {
+  transform: translate(5vh, -10vh) rotate(30deg);
 }
 
-.uppercut {
-  transform: translatey(-35vh);
+.jabRight {
+  transform: translate(-5vh, -25vh) rotate(-20deg);;
+}
+
+.opponent .jabRight {
+  transform: translate(-5vh, -10vh) rotate(-30deg);
+}
+
+.uppercutLeft {
+  transform: translate(5vh, -35vh) rotate(20deg);
+}
+
+.uppercutRight {
+  transform: translate(-5vh, -35vh) rotate(-20deg);
 }
 
 .jump {

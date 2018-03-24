@@ -60,27 +60,27 @@ const defend = player => executeAfterComboKeysWindowPasses(player, () => {
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   disableInput(player, 500);
-  animation(`.${player} .left`, 'jab', 500);
+  animation(`.${player} .left`, 'jabLeft', 500);
   animation(`.${player}`, 'attack', 500);
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
   disableInput(player, 500);
-  animation(`.${player} .right`, 'jab', 500);
+  animation(`.${player} .right`, 'jabRight', 500);
   animation(`.${player}`, 'attack', 500);
 });
 
 const uppercutLeft = player => {
   disableInput(player, 500);
   animation(`.${player} .body, .${player} .right.arm`, 'jump', 500);
-  animation(`.${player} .left.arm`, 'uppercut', 500);
+  animation(`.${player} .left.arm`, 'uppercutLeft', 500);
   animation(`.${player}`, 'attack', 500);
 };
 
 const uppercutRight = player => {
   disableInput(player, 500);
   animation(`.${player} .body, .${player} .left.arm`, 'jump', 500);
-  animation(`.${player} .right.arm`, 'uppercut', 500);
+  animation(`.${player} .right.arm`, 'uppercutRight', 500);
   animation(`.${player}`, 'attack', 500);
 };
 
