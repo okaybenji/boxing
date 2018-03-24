@@ -68,6 +68,14 @@ div {
   transform: translatey(10vh);
 }
 
+.nudgeDown {
+  transform: translatey(5vh);
+}
+
+.opponent .nudgeDown {
+  transform: translatey(-5vh);
+}
+
 .dodgeLeft {
   transform: translatex(-20vh);
 }

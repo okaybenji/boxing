@@ -1,7 +1,7 @@
 # boxing
 2-player local punch-out-style boxing
 
-*work in progress!* at the moment it only works visually
+*work in progress!*
 
 try it here: https://okaybenji.github.io/boxing/
 

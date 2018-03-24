@@ -24,6 +24,24 @@ const animation = (selector, className, duration) => {
   }, duration);
 };
 
+const stun = player => {
+  disableInput(player, 500);
+  setAction(player, 'stun', 500);
+  animation(`.${player} div`, 'shake', 500);
+};
+
+const hit = player => {
+  animation(`.${player} .body`, 'nudgeDown', 250);
+
+  const action = state[player].action;
+  if (action === 'defend') {
+    takeDamage(player, 2);
+  } else {
+    takeDamage(player, 8);
+    stun(player);
+  }
+};
+
 const takeDamage = (player, amount) => {
   state[player].health -= Math.min(amount, state[player].health);
   $(`#${player} .healthbar`).style.width = state[player].health + 'vh';
@@ -43,18 +61,30 @@ const disableInput = (player, duration) => {
   }, duration);
 };
 
+// Set player action for the passed duration.
+const setAction = (player, action, duration) => {
+  state[player].action = action;
+
+  setTimeout(() => {
+    state[player].action = '';
+  }, duration);
+};
+
 const duck = player => {
   disableInput(player, 500);
+  setAction(player, 'duck', 500);
   animation(`.${player} div`, 'duck', 500);
 };
 
 const dodgeLeft = player => {
   disableInput(player, 500);
+  setAction(player, 'dodgeLeft', 500);
   animation(`.${player} div`, 'dodgeLeft', 500);
 };
 
 const dodgeRight = player => {
   disableInput(player, 500);
+  setAction(player, 'dodgeRight', 500);
   animation(`.${player} div`, 'dodgeRight', 500);
 };
 
@@ -72,35 +102,59 @@ const executeAfterComboKeysWindowPasses = (player, action) => {
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
   disableInput(player, 500);
-
+  setAction(player, 'defend', 500);
   animation(`.${player} .left.arm`, 'defendLeft', 500);
   animation(`.${player} .right.arm`, 'defendRight', 500);
 });
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   disableInput(player, 500);
+  setAction(player, 'attack', 500);
   animation(`.${player} .left`, 'jabLeft', 500);
   animation(`.${player}`, 'attack', 500);
+
+  const opponent = player === 'one' ? 'two' : 'one';
+  if (state[opponent].action !== 'dodgeLeft') {
+    hit(opponent);
+  }
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
   disableInput(player, 500);
+  setAction(player, 'attack', 500);
   animation(`.${player} .right`, 'jabRight', 500);
   animation(`.${player}`, 'attack', 500);
+
+  const opponent = player === 'one' ? 'two' : 'one';
+  if (state[opponent].action !== 'dodgeRight') {
+    hit(opponent);
+  }
 });
 
 const uppercutLeft = player => {
   disableInput(player, 500);
+  setAction(player, 'attack', 500);
   animation(`.${player} .body, .${player} .right.arm`, 'jump', 500);
   animation(`.${player} .left.arm`, 'uppercutLeft', 500);
   animation(`.${player}`, 'attack', 500);
+
+  const opponent = player === 'one' ? 'two' : 'one';
+  if (state[opponent].action !== 'dodgeLeft' && state[opponent].action !== 'duck') {
+    hit(opponent);
+  }
 };
 
 const uppercutRight = player => {
   disableInput(player, 500);
+  setAction(player, 'attack', 500);
   animation(`.${player} .body, .${player} .left.arm`, 'jump', 500);
   animation(`.${player} .right.arm`, 'uppercutRight', 500);
   animation(`.${player}`, 'attack', 500);
+
+  const opponent = player === 'one' ? 'two' : 'one';
+  if (state[opponent].action !== 'dodgeRight' && state[opponent].action !== 'duck') {
+    hit(opponent);
+  }
 };
 
 const applyKeys = () => {
