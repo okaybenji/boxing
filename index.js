@@ -5,25 +5,39 @@ const blockInput = {one: false, two: false};
 // Give a window during which a player can uppercut instead of defending or jabbing.
 const inputTimeouts = {one: undefined, two: undefined};
 
-const animation = (player, selector, transformation) => {
-  clearTimeout(inputTimeouts[player]);
-  blockInput[player] = true;
+const animation = (selector, className, duration) => {
   const elements = $$(selector);
-  elements.forEach(el => {
-    el.style.transform = transformation;
-  });
+  elements.forEach(el => el.classList.add(className))
 
   setTimeout(() => {
-    elements.forEach(el => {
-      el.style.transform = '';
-    });
-    blockInput[player] = false;
-  }, 500);
+    elements.forEach(el => el.classList.remove(className));
+  }, duration);
 };
 
-const duck = player => animation(player, `.${player} div`, 'translatey(10vh)');
-const dodgeLeft = player => animation(player, `.${player} div`, 'translatex(-20vh)');
-const dodgeRight = player => animation(player, `.${player} div`, 'translatex(20vh)');
+// Prevent player from taking an action for a given period of time.
+const disableInput = (player, duration) => {
+  clearTimeout(inputTimeouts[player]);
+  blockInput[player] = true;
+
+  setTimeout(() => {
+    blockInput[player] = false;
+  }, duration);
+};
+
+const duck = player => {
+  disableInput(player, 500);
+  animation(`.${player} div`, 'duck', 500);
+};
+
+const dodgeLeft = player => {
+  disableInput(player, 500);
+  animation(`.${player} div`, 'dodgeLeft', 500);
+};
+
+const dodgeRight = player => {
+  disableInput(player, 500);
+  animation(`.${player} div`, 'dodgeRight', 500);
+};
 
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
 const executeAfterComboKeysWindowPasses = (player, action) => {
@@ -38,34 +52,32 @@ const executeAfterComboKeysWindowPasses = (player, action) => {
 };
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
-  animation(player, `.${player} .left.arm`, 'translatey(-30vh) rotate(45deg)');
-  animation(player, `.${player} .right.arm`, 'translatey(-30vh) rotate(-45deg)');
+  disableInput(player, 500);
+
+  animation(`.${player} .left.arm`, 'defendLeft', 500);
+  animation(`.${player} .right.arm`, 'defendRight', 500);
 });
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
-    animation(player, `.${player} .left`, 'translatey(-25vh)');
+  disableInput(player, 500);
+  animation(`.${player} .left`, 'jab', 500);
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
-    animation(player, `.${player} .right`, 'translatey(-25vh)');
+  disableInput(player, 500);
+  animation(`.${player} .right`, 'jab', 500);
 });
 
 const uppercutLeft = player => {
-  animation(player, `.${player} div`, 'translatey(-10vh)');
-
-  const leftArms = $$(`.${player} .left.arm`);
-  leftArms.forEach(arm => {
-    arm.style.transform = 'translatey(-35vh)';
-  });
+  disableInput(player, 500);
+  animation(`.${player} .body, .${player} .right.arm`, 'jump', 500);
+  animation(`.${player} .left.arm`, 'uppercut', 500);
 };
 
 const uppercutRight = player => {
-  animation(player, `.${player} div`, 'translatey(-10vh)');
-
-  const rightArms = $$(`.${player} .right.arm`);
-  rightArms.forEach(arm => {
-    arm.style.transform = 'translatey(-35vh)';
-  });
+  disableInput(player, 500);
+  animation(`.${player} .body, .${player} .left.arm`, 'jump', 500);
+  animation(`.${player} .right.arm`, 'uppercut', 500);
 };
 
 const applyKeys = () => {

@@ -47,3 +47,36 @@ div {
   transform: scaleX(-0.5) scaleY(0.5);
   z-index: -1;
 }
+
+/* Animations */
+.duck {
+  transform: translatey(10vh);
+}
+
+.dodgeLeft {
+  transform: translatex(-20vh);
+}
+
+.dodgeRight {
+  transform: translatex(20vh);
+}
+
+.defendLeft {
+  transform: translatey(-30vh) rotate(45deg);
+}
+
+.defendRight {
+  transform: translatey(-30vh) rotate(-45deg);
+}
+
+.jab {
+  transform: translatey(-25vh);
+}
+
+.uppercut {
+  transform: translatey(-35vh);
+}
+
+.jump {
+  transform: translatey(-10vh);
+}
