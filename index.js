@@ -47,7 +47,10 @@ const takeDamage = (player, amount) => {
   $(`#${player} .healthbar`).style.width = state[player].health + 'vh';
 
   if (state[player].health === 0) {
+    const opponent = player === 'one' ? 'two' : 'one';
     $$(`.${player}`).forEach(el => el.classList.add('knockout'));
+    $$(`.${opponent} .body`).forEach(el => el.classList.add('celebrateBody'));
+    $$(`.${opponent} .arm`).forEach(el => el.classList.add('celebrateArm'));
   }
 };
 
