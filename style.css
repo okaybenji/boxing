@@ -17,12 +17,17 @@ div {
   border-right: 1px solid gray;
 }
 
-.one .arm, .one .body {
+.one .arm, .one .body, #one .healthbar {
   background: #fd9aea;
 }
 
-.two .arm, .two .body {
+.two .arm, .two .body, #two .healthbar {
   background: #9afdb1;
+}
+
+.healthbar {
+  height: 2vh;
+  transition: all 0.125s ease;
 }
 
 .player {
@@ -109,6 +114,10 @@ div {
 
 .shake {
   animation: shake 0.1s ease-in-out 0.1s infinite alternate;
+}
+
+.knockout {
+  transform: translatey(100vh);
 }
 
 @keyframes shake {

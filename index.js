@@ -1,9 +1,19 @@
+const $ = query => document.querySelector(query);
 const $$ = query => document.querySelectorAll(query);
 
 const keyMap = {};
 const blockInput = {one: false, two: false};
-// Give a window during which a player can uppercut instead of defending or jabbing.
-const inputTimeouts = {one: undefined, two: undefined};
+const state = {
+  one: {
+    health: 75,
+    // Give a window during which a player can uppercut instead of defending or jabbing.
+    inputTimeout: undefined,
+  },
+  two: {
+    health: 75,
+    inputTimeout: undefined,
+  }
+};
 
 const animation = (selector, className, duration) => {
   const elements = $$(selector);
@@ -14,9 +24,18 @@ const animation = (selector, className, duration) => {
   }, duration);
 };
 
+const takeDamage = (player, amount) => {
+  state[player].health -= Math.min(amount, state[player].health);
+  $(`#${player} .healthbar`).style.width = state[player].health + 'vh';
+
+  if (state[player].health === 0) {
+    $$(`.${player}`).forEach(el => el.classList.add('knockout'));
+  }
+};
+
 // Prevent player from taking an action for a given period of time.
 const disableInput = (player, duration) => {
-  clearTimeout(inputTimeouts[player]);
+  clearTimeout(state[player].inputTimeout);
   blockInput[player] = true;
 
   setTimeout(() => {
@@ -42,13 +61,13 @@ const dodgeRight = player => {
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
 const executeAfterComboKeysWindowPasses = (player, action) => {
   const execute = () => {
-    inputTimeouts[player] = undefined;
+    state[player].inputTimeout = undefined;
     action();
   };
 
   // If player doesn't press up within the timeout period, defend/jab.
-  clearTimeout(inputTimeouts[player]);
-  inputTimeouts[player] = setTimeout(execute, 25);
+  clearTimeout(state[player].inputTimeout);
+  state[player].inputTimeout = setTimeout(execute, 25);
 };
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
