@@ -94,3 +94,16 @@ div {
 .jump {
   transform: translatey(-10vh);
 }
+
+.shake {
+  animation: shake 0.1s ease-in-out 0.1s infinite alternate;
+}
+
+@keyframes shake {
+ from {
+   transform: rotate(5deg);
+ }
+ to {
+   transform: rotate(-5deg);
+ }
+}
