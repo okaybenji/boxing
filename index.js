@@ -2,15 +2,16 @@ const $ = query => document.querySelector(query);
 const $$ = query => document.querySelectorAll(query);
 
 const keyMap = {};
-const blockInput = {one: false, two: false};
 const state = {
   one: {
     health: 75,
+    disableInput: false,
     // Give a window during which a player can uppercut instead of defending or jabbing.
     inputTimeout: undefined,
   },
   two: {
     health: 75,
+    disableInput: false,
     inputTimeout: undefined,
   }
 };
@@ -57,10 +58,10 @@ const takeDamage = (player, amount) => {
 // Prevent player from taking an action for a given period of time.
 const disableInput = (player, duration) => {
   clearTimeout(state[player].inputTimeout);
-  blockInput[player] = true;
+  state[player].disableInput = true;
 
   setTimeout(() => {
-    blockInput[player] = false;
+    state[player].disableInput = false;
   }, duration);
 };
 
@@ -162,7 +163,7 @@ const uppercutRight = player => {
 
 const applyKeys = () => {
   // Controls for player one.
-  if (!blockInput.one) {
+  if (!state.one.disableInput) {
     keyMap.f && keyMap.w ? uppercutLeft('one')
     : keyMap.g && keyMap.w ? uppercutRight('one')
     : keyMap.w ? defend('one')
@@ -175,7 +176,7 @@ const applyKeys = () => {
   }
 
   // Controls for player two.
-  if (!blockInput.two) {
+  if (!state.two.disableInput) {
     keyMap[`;`] && keyMap.i ? uppercutLeft('two')
     : keyMap[`'`] && keyMap.i ? uppercutRight('two')
     : keyMap.i ? defend('two')
