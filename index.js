@@ -81,15 +81,15 @@ const duck = player => {
 };
 
 const dodgeLeft = player => {
-  disableInput(player, 500);
-  setAction(player, 'dodgeLeft', 500);
-  animation(`.${player} div`, 'dodgeLeft', 500);
+  disableInput(player, 350);
+  setAction(player, 'dodgeLeft', 350);
+  animation(`.${player} div`, 'dodgeLeft', 350);
 };
 
 const dodgeRight = player => {
-  disableInput(player, 500);
-  setAction(player, 'dodgeRight', 500);
-  animation(`.${player} div`, 'dodgeRight', 500);
+  disableInput(player, 350);
+  setAction(player, 'dodgeRight', 350);
+  animation(`.${player} div`, 'dodgeRight', 350);
 };
 
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
