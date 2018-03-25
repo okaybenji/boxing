@@ -24,24 +24,6 @@ const animation = (selector, className, duration) => {
   }, duration);
 };
 
-const stun = (player, duration) => {
-  disableInput(player, duration);
-  setAction(player, 'stun', duration);
-  animation(`.${player} div`, 'shake', duration);
-};
-
-const hit = (player, isUppercut = false) => {
-  animation(`.${player} .body`, 'nudgeDown', 250);
-
-  const action = state[player].action;
-  if (action === 'defend') {
-    takeDamage(player, isUppercut ? 3 : 2);
-  } else {
-    takeDamage(player, isUppercut ? 12 : 8);
-    stun(player, isUppercut ? 750 : 500);
-  }
-};
-
 const takeDamage = (player, amount) => {
   state[player].health -= Math.min(amount, state[player].health);
   $(`#${player} .healthbar`).style.width = state[player].health + 'vh';
@@ -94,6 +76,12 @@ const dodgeRight = player => {
   animation(`.${player} div`, 'dodgeRight', duration);
 };
 
+const stun = (player, duration) => {
+  disableInput(player, duration);
+  setAction(player, 'stun', duration);
+  animation(`.${player} div`, 'shake', duration);
+};
+
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
 const executeAfterComboKeysWindowPasses = (player, action) => {
   const execute = () => {
@@ -113,6 +101,18 @@ const defend = player => executeAfterComboKeysWindowPasses(player, () => {
   animation(`.${player} .left.arm`, 'defendLeft', duration);
   animation(`.${player} .right.arm`, 'defendRight', duration);
 });
+
+const hit = (player, isUppercut = false) => {
+  animation(`.${player} .body`, 'nudgeDown', 250);
+
+  const action = state[player].action;
+  if (action === 'defend') {
+    takeDamage(player, isUppercut ? 3 : 2);
+  } else {
+    takeDamage(player, isUppercut ? 12 : 8);
+    stun(player, isUppercut ? 750 : 500);
+  }
+};
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   const duration = 500;
