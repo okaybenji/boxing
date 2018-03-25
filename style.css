@@ -28,11 +28,17 @@ div {
 .healthbar {
   height: 2vh;
   transition: all 0.125s ease;
+  border-radius: 100vh;
 }
 
 .player {
   position: absolute;
   bottom: 0;
+  transition: all 0.125s ease;
+}
+
+.player div {
+  border-radius: 100vh;
   transition: all 0.125s ease;
 }
 
@@ -43,13 +49,11 @@ div {
 .arm {
   width: 8vh;
   height: 30vh;
-  transition: all 0.125s ease;
 }
 
 .body {
   width: 24vh;
   height: 50vh;
-  transition: all 0.125s ease;
 }
 
 .opponent {
