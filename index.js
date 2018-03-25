@@ -1,6 +1,5 @@
 const $ = query => document.querySelector(query);
 const $$ = query => document.querySelectorAll(query);
-
 const keyMap = {};
 const state = {
   one: {
@@ -75,21 +74,24 @@ const setAction = (player, action, duration) => {
 };
 
 const duck = player => {
-  disableInput(player, 500);
-  setAction(player, 'duck', 500);
-  animation(`.${player} div`, 'duck', 500);
+  const duration = 500;
+  disableInput(player, duration);
+  setAction(player, 'duck', duration);
+  animation(`.${player} div`, 'duck', duration);
 };
 
 const dodgeLeft = player => {
-  disableInput(player, 350);
-  setAction(player, 'dodgeLeft', 350);
-  animation(`.${player} div`, 'dodgeLeft', 350);
+  const duration = 350;
+  disableInput(player, duration);
+  setAction(player, 'dodgeLeft', duration);
+  animation(`.${player} div`, 'dodgeLeft', duration);
 };
 
 const dodgeRight = player => {
-  disableInput(player, 350);
-  setAction(player, 'dodgeRight', 350);
-  animation(`.${player} div`, 'dodgeRight', 350);
+  const duration = 350;
+  disableInput(player, duration);
+  setAction(player, 'dodgeRight', duration);
+  animation(`.${player} div`, 'dodgeRight', duration);
 };
 
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
@@ -105,17 +107,19 @@ const executeAfterComboKeysWindowPasses = (player, action) => {
 };
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
-  disableInput(player, 500);
-  setAction(player, 'defend', 500);
-  animation(`.${player} .left.arm`, 'defendLeft', 500);
-  animation(`.${player} .right.arm`, 'defendRight', 500);
+  const duration = 500;
+  disableInput(player, duration);
+  setAction(player, 'defend', duration);
+  animation(`.${player} .left.arm`, 'defendLeft', duration);
+  animation(`.${player} .right.arm`, 'defendRight', duration);
 });
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
-  disableInput(player, 500);
-  setAction(player, 'attack', 500);
-  animation(`.${player} .left`, 'jabLeft', 500);
-  animation(`.${player}`, 'attack', 500);
+  const duration = 500;
+  disableInput(player, duration);
+  setAction(player, 'attack', duration);
+  animation(`.${player} .left`, 'jabLeft', duration);
+  animation(`.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
@@ -126,10 +130,11 @@ const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
-  disableInput(player, 500);
-  setAction(player, 'attack', 500);
-  animation(`.${player} .right`, 'jabRight', 500);
-  animation(`.${player}`, 'attack', 500);
+  const duration = 500;
+  disableInput(player, duration);
+  setAction(player, 'attack', duration);
+  animation(`.${player} .right`, 'jabRight', duration);
+  animation(`.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
@@ -140,11 +145,12 @@ const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
 });
 
 const uppercutLeft = player => {
-  disableInput(player, 750);
-  setAction(player, 'attack', 750);
-  animation(`.${player} .body, .${player} .right.arm`, 'jump', 750);
-  animation(`.${player} .left.arm`, 'uppercutLeft', 750);
-  animation(`.${player}`, 'attack', 750);
+  const duration = 750;
+  disableInput(player, duration);
+  setAction(player, 'attack', duration);
+  animation(`.${player} .body, .${player} .right.arm`, 'jump', duration);
+  animation(`.${player} .left.arm`, 'uppercutLeft', duration);
+  animation(`.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
@@ -156,11 +162,12 @@ const uppercutLeft = player => {
 };
 
 const uppercutRight = player => {
-  disableInput(player, 750);
-  setAction(player, 'attack', 750);
-  animation(`.${player} .body, .${player} .left.arm`, 'jump', 750);
-  animation(`.${player} .right.arm`, 'uppercutRight', 750);
-  animation(`.${player}`, 'attack', 750);
+  const duration = 750;
+  disableInput(player, duration);
+  setAction(player, 'attack', duration);
+  animation(`.${player} .body, .${player} .left.arm`, 'jump', duration);
+  animation(`.${player} .right.arm`, 'uppercutRight', duration);
+  animation(`.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
