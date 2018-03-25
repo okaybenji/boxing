@@ -91,7 +91,7 @@ const executeAfterComboKeysWindowPasses = (player, action) => {
 
   // If player doesn't press up within the timeout period, defend/jab.
   clearTimeout(state[player].inputTimeout);
-  state[player].inputTimeout = setTimeout(execute, 25);
+  state[player].inputTimeout = setTimeout(execute, 35);
 };
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
