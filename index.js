@@ -118,9 +118,11 @@ const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   animation(`.${player}`, 'attack', 500);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  if (state[opponent].action !== 'dodgeLeft') {
-    hit(opponent);
-  }
+  setTimeout(() => {
+    if (state[opponent].action !== 'dodgeLeft') {
+      hit(opponent);
+    }
+  }, 125);
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
@@ -130,9 +132,11 @@ const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
   animation(`.${player}`, 'attack', 500);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  if (state[opponent].action !== 'dodgeRight') {
-    hit(opponent);
-  }
+  setTimeout(() => {
+    if (state[opponent].action !== 'dodgeRight') {
+      hit(opponent);
+    }
+  }, 125);
 });
 
 const uppercutLeft = player => {
@@ -143,9 +147,11 @@ const uppercutLeft = player => {
   animation(`.${player}`, 'attack', 500);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  if (state[opponent].action !== 'dodgeLeft' && state[opponent].action !== 'duck') {
-    hit(opponent);
-  }
+  setTimeout(() => {
+    if (state[opponent].action !== 'dodgeLeft' && state[opponent].action !== 'duck') {
+      hit(opponent);
+    }
+  }, 125);
 };
 
 const uppercutRight = player => {
@@ -156,9 +162,11 @@ const uppercutRight = player => {
   animation(`.${player}`, 'attack', 500);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  if (state[opponent].action !== 'dodgeRight' && state[opponent].action !== 'duck') {
-    hit(opponent);
-  }
+  setTimeout(() => {
+    if (state[opponent].action !== 'dodgeRight' && state[opponent].action !== 'duck') {
+      hit(opponent);
+    }
+  }, 125);
 };
 
 const applyKeys = () => {
