@@ -4,6 +4,7 @@ const keyMap = {};
 const state = {
   one: {
     health: 75,
+    action: '',
     disableInput: false,
     // Give a window during which a player can uppercut instead of defending or jabbing.
     delayingInput: false,
@@ -11,6 +12,7 @@ const state = {
   },
   two: {
     health: 75,
+    action: '',
     disableInput: false,
     delayingInput: false,
     inputTimeout: undefined,
