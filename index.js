@@ -6,11 +6,13 @@ const state = {
     health: 75,
     disableInput: false,
     // Give a window during which a player can uppercut instead of defending or jabbing.
+    delayingInput: false,
     inputTimeout: undefined,
   },
   two: {
     health: 75,
     disableInput: false,
+    delayingInput: false,
     inputTimeout: undefined,
   }
 };
@@ -40,6 +42,7 @@ const takeDamage = (player, amount) => {
 const disableInput = (player, duration) => {
   clearTimeout(state[player].inputTimeout);
   state[player].disableInput = true;
+  state[player].delayingInput = false;
 
   setTimeout(() => {
     state[player].disableInput = false;
@@ -84,8 +87,14 @@ const stun = (player, duration) => {
 
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
 const executeAfterComboKeysWindowPasses = (player, action) => {
+  if (state[player].delayingInput) {
+    // We already received this command.
+    return;
+  }
+  state[player].delayingInput = true;
   const execute = () => {
     state[player].inputTimeout = undefined;
+    state[player].delayingInput = false;
     action();
   };
 
