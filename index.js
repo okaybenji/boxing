@@ -125,6 +125,8 @@ const hit = (player, isUppercut = false) => {
   }
 };
 
+const hitDelay = 150; // Time in ms a player has to block/dodge an incoming attack.
+
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   const duration = 500;
   disableInput(player, duration);
@@ -137,7 +139,7 @@ const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
     if (state[opponent].action !== 'dodgeLeft') {
       hit(opponent);
     }
-  }, 125);
+  }, hitDelay);
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
@@ -152,7 +154,7 @@ const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
     if (state[opponent].action !== 'dodgeRight') {
       hit(opponent);
     }
-  }, 125);
+  }, hitDelay);
 });
 
 const uppercutLeft = player => {
@@ -169,7 +171,7 @@ const uppercutLeft = player => {
       const isUppercut = true;
       hit(opponent, isUppercut);
     }
-  }, 125);
+  }, hitDelay);
 };
 
 const uppercutRight = player => {
@@ -186,7 +188,7 @@ const uppercutRight = player => {
       const isUppercut = true;
       hit(opponent, isUppercut);
     }
-  }, 125);
+  }, hitDelay);
 };
 
 // Keyboard controls.

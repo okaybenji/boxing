@@ -30,19 +30,19 @@ div {
 
 .healthbar {
   height: 2vh;
-  transition: all 0.125s ease;
+  transition: all 0.25s ease;
   border-radius: 100vh;
 }
 
 .player {
   position: absolute;
   bottom: 0;
-  transition: all 0.125s ease;
+  transition: all 0.15s ease;
 }
 
 .player div {
   border-radius: 100vh;
-  transition: all 0.125s ease;
+  transition: all 0.15s ease;
 }
 
 .player.attack {
