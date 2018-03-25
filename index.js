@@ -25,10 +25,10 @@ const animation = (selector, className, duration) => {
   }, duration);
 };
 
-const stun = player => {
-  disableInput(player, 500);
-  setAction(player, 'stun', 500);
-  animation(`.${player} div`, 'shake', 500);
+const stun = (player, duration) => {
+  disableInput(player, duration);
+  setAction(player, 'stun', duration);
+  animation(`.${player} div`, 'shake', duration);
 };
 
 const hit = (player, isUppercut = false) => {
@@ -39,7 +39,7 @@ const hit = (player, isUppercut = false) => {
     takeDamage(player, isUppercut ? 3 : 2);
   } else {
     takeDamage(player, isUppercut ? 12 : 8);
-    stun(player);
+    stun(player, isUppercut ? 750 : 500);
   }
 };
 
