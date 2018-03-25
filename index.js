@@ -140,11 +140,11 @@ const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
 });
 
 const uppercutLeft = player => {
-  disableInput(player, 500);
-  setAction(player, 'attack', 500);
-  animation(`.${player} .body, .${player} .right.arm`, 'jump', 500);
-  animation(`.${player} .left.arm`, 'uppercutLeft', 500);
-  animation(`.${player}`, 'attack', 500);
+  disableInput(player, 750);
+  setAction(player, 'attack', 750);
+  animation(`.${player} .body, .${player} .right.arm`, 'jump', 750);
+  animation(`.${player} .left.arm`, 'uppercutLeft', 750);
+  animation(`.${player}`, 'attack', 750);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
@@ -156,11 +156,11 @@ const uppercutLeft = player => {
 };
 
 const uppercutRight = player => {
-  disableInput(player, 500);
-  setAction(player, 'attack', 500);
-  animation(`.${player} .body, .${player} .left.arm`, 'jump', 500);
-  animation(`.${player} .right.arm`, 'uppercutRight', 500);
-  animation(`.${player}`, 'attack', 500);
+  disableInput(player, 750);
+  setAction(player, 'attack', 750);
+  animation(`.${player} .body, .${player} .left.arm`, 'jump', 750);
+  animation(`.${player} .right.arm`, 'uppercutRight', 750);
+  animation(`.${player}`, 'attack', 750);
 
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
