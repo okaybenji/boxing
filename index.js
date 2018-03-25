@@ -31,14 +31,14 @@ const stun = player => {
   animation(`.${player} div`, 'shake', 500);
 };
 
-const hit = player => {
+const hit = (player, isUppercut = false) => {
   animation(`.${player} .body`, 'nudgeDown', 250);
 
   const action = state[player].action;
   if (action === 'defend') {
-    takeDamage(player, 2);
+    takeDamage(player, isUppercut ? 3 : 2);
   } else {
-    takeDamage(player, 8);
+    takeDamage(player, isUppercut ? 12 : 8);
     stun(player);
   }
 };
@@ -149,7 +149,8 @@ const uppercutLeft = player => {
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
     if (state[opponent].action !== 'dodgeLeft' && state[opponent].action !== 'duck') {
-      hit(opponent);
+      const isUppercut = true;
+      hit(opponent, isUppercut);
     }
   }, 125);
 };
@@ -164,7 +165,8 @@ const uppercutRight = player => {
   const opponent = player === 'one' ? 'two' : 'one';
   setTimeout(() => {
     if (state[opponent].action !== 'dodgeRight' && state[opponent].action !== 'duck') {
-      hit(opponent);
+      const isUppercut = true;
+      hit(opponent, isUppercut);
     }
   }, 125);
 };
