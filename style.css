@@ -16,7 +16,7 @@ div {
 #divider {
   background: lightgray;
   width: 1vh;
-  height: 100vh;
+  height: 98vh;
   border-radius: 100vh;
 }
 
@@ -155,6 +155,7 @@ div {
 @keyframes knockout {
   to {
     transform: translateY(120vh);
+    opacity: 0;
   }
 }
 
