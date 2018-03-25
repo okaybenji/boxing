@@ -228,86 +228,102 @@ const keyOff = e => {
 window.addEventListener('keydown', keyOn, false);
 window.addEventListener('keyup', keyOff, false);
 
-// Gamepad support via gamepad.js
-const gamepad = new Gamepad();
-const buttons = {
-  button_1: 'punchLeft',
-  button_2: 'punchRight',
-  button_3: 'punchLeft',
-  button_4: 'punchRight',
-  shoulder_bottom_left: 'punchLeft',
-  shoulder_bottom_right: 'punchRight',
-  shoulder_top_left: 'dodgeLeft',
-  shoulder_top_right: 'dodgeRight',
-  select: '',
-  start: '',
-  stick_button_left: '',
-  stick_button_right: '',
-  d_pad_up: 'defend',
-  d_pad_down: 'duck',
-  d_pad_left: 'dodgeLeft',
-  d_pad_right: 'dodgeRight',
-  vendor: '',
-};
-// For now, just going to map gamepad buttons to keyboard keys.
-const commandToKey = {
-  one: {
-    defend: `w`,
-    dodgeLeft: `a`,
-    duck: `s`,
-    dodgeRight: `d`,
-    punchLeft: `f`,
-    punchRight: `g`,
-  },
-  two: {
-    defend: `i`,
-    dodgeLeft: `j`,
-    duck: `k`,
-    dodgeRight: `l`,
-    punchLeft: `;`,
-    punchRight: `'`,
-  }
-};
-
-// Set whether button is pressed or not.
-const updateButton = (e, pressed) => {
-  /**
-   * Even gamepads will control player 1, odds player 2.
-   * I figure this way if there are multiple controllers plugged in,
-   * players can use whichever ones they want.
-   */
-  const player = e.player % 2 === 0 ? 'one' : 'two';
-  const key = commandToKey[player][buttons[e.button]];
-  if (!key) {
+/**
+ * Gamepad controls.
+ * Setting this up only if a gamepad is connected, since apparently
+ * gamepad.js breaks the keyboard controls. 😑
+ * This works fine w/ Xbone controllers but PS4 support is not good.
+ * TODO: Figure out how to do this w/o gamepad.js!
+ */
+let gamepad;
+const setUpGamepads = () => {
+  if (gamepad) {
     return;
   }
-  keyMap[key] = pressed;
-  applyKeys();
+
+  // Gamepad support via gamepad.js
+  gamepad = new Gamepad();
+  const buttons = {
+    button_1: 'punchLeft',
+    button_2: 'punchRight',
+    button_3: 'punchLeft',
+    button_4: 'punchRight',
+    shoulder_bottom_left: 'punchLeft',
+    shoulder_bottom_right: 'punchRight',
+    shoulder_top_left: 'dodgeLeft',
+    shoulder_top_right: 'dodgeRight',
+    select: '',
+    start: '',
+    stick_button_left: '',
+    stick_button_right: '',
+    d_pad_up: 'defend',
+    d_pad_down: 'duck',
+    d_pad_left: 'dodgeLeft',
+    d_pad_right: 'dodgeRight',
+    vendor: '',
+  };
+  // For now, just going to map gamepad buttons to keyboard keys.
+  const commandToKey = {
+    one: {
+      defend: `w`,
+      dodgeLeft: `a`,
+      duck: `s`,
+      dodgeRight: `d`,
+      punchLeft: `f`,
+      punchRight: `g`,
+    },
+    two: {
+      defend: `i`,
+      dodgeLeft: `j`,
+      duck: `k`,
+      dodgeRight: `l`,
+      punchLeft: `;`,
+      punchRight: `'`,
+    }
+  };
+
+  // Set whether button is pressed or not.
+  const updateButton = (e, pressed) => {
+    /**
+     * Even gamepads will control player 1, odds player 2.
+     * I figure this way if there are multiple controllers plugged in,
+     * players can use whichever ones they want.
+     */
+    const player = e.player % 2 === 0 ? 'one' : 'two';
+    const key = commandToKey[player][buttons[e.button]];
+    if (!key) {
+      return;
+    }
+    keyMap[key] = pressed;
+    applyKeys();
+  };
+
+  gamepad.on('press', Object.keys(buttons), e => {
+    updateButton(e, true);
+  });
+
+  gamepad.on('release', Object.keys(buttons), e => {
+    updateButton(e, false);
+  });
+
+  // Allow moving with analog sticks.
+  const threshold = 0.25;
+  gamepad.on('press', ['stick_axis_left', 'stick_axis_right'], e => {
+    let button;
+    if (Math.abs(e.value[0]) > threshold) {
+      button = e.value[0] < 0 ? 'd_pad_left' : 'd_pad_right';
+    } else if (Math.abs(e.value[1]) > threshold) {
+      button = e.value[1] < 0 ? 'd_pad_up' : 'd_pad_down';
+    }
+    updateButton(Object.assign(e, {button}), true);
+  });
+
+  gamepad.on('release', ['stick_axis_left', 'stick_axis_right'], e => {
+    updateButton(Object.assign(e, {button: 'd_pad_left'}), false);
+    updateButton(Object.assign(e, {button: 'd_pad_right'}), false);
+    updateButton(Object.assign(e, {button: 'd_pad_up'}), false);
+    updateButton(Object.assign(e, {button: 'd_pad_down'}), false);
+  });
 };
 
-gamepad.on('press', Object.keys(buttons), e => {
-  updateButton(e, true);
-});
-
-gamepad.on('release', Object.keys(buttons), e => {
-  updateButton(e, false);
-});
-
-// Allow moving with analog sticks.
-const threshold = 0.25;
-gamepad.on('press', ['stick_axis_left', 'stick_axis_right'], e => {
-  let button;
-  if (Math.abs(e.value[0]) > threshold) {
-    button = e.value[0] < 0 ? 'd_pad_left' : 'd_pad_right';
-  } else if (Math.abs(e.value[1]) > threshold) {
-    button = e.value[1] < 0 ? 'd_pad_up' : 'd_pad_down';
-  }
-  updateButton(Object.assign(e, {button}), true);
-});
-
-gamepad.on('release', ['stick_axis_left', 'stick_axis_right'], e => {
-  updateButton(Object.assign(e, {button: 'd_pad_left'}), false);
-  updateButton(Object.assign(e, {button: 'd_pad_right'}), false);
-  updateButton(Object.assign(e, {button: 'd_pad_up'}), false);
-  updateButton(Object.assign(e, {button: 'd_pad_down'}), false);
-});
+window.addEventListener('gamepadconnected', setUpGamepads, false);
