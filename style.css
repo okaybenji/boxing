@@ -1,3 +1,7 @@
+body {
+  background: hsl(0, 0%, 95%);
+}
+
 main {
   display: flex;
 }
@@ -14,18 +18,18 @@ div {
 }
 
 #divider {
-  background: lightgray;
+  background: white;
   width: 1vh;
   height: 98vh;
   border-radius: 100vh;
 }
 
 .one .arm, .one .body, #one .healthbar {
-  background: #fd9aea;
+  background: hsl(231, 69%, 55%);
 }
 
 .two .arm, .two .body, #two .healthbar {
-  background: #9afdb1;
+  background: hsl(357, 99%, 65%);
 }
 
 .healthbar {
