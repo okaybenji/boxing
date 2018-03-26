@@ -5,18 +5,29 @@ const state = {
   one: {
     health: 75,
     action: '',
-    disableInput: false,
-    // Give a window during which a player can uppercut instead of defending or jabbing.
-    delayingInput: false,
-    inputTimeout: undefined,
+    inputDelayed: false,
+    toInvokeIfCleared: [], // Timeouts we want to fire immediately if cleared.
+    timeouts: [],
   },
   two: {
     health: 75,
     action: '',
-    disableInput: false,
-    delayingInput: false,
-    inputTimeout: undefined,
+    inputDelayed: false,
+    toInvokeIfCleared: [],
+    timeouts: [],
   }
+};
+
+// Sets up a timeout that can be fired prematurely if needed.
+const fire = (callback, delay) => {
+  const timeout = setTimeout(callback, delay);
+
+  return {
+    invoke() {
+      clearTimeout(timeout);
+      callback();
+    }
+  };
 };
 
 // Reload page w/o POST.
@@ -24,13 +35,13 @@ const reset = () => {
   window.location = window.location;
 };
 
-const animation = (selector, className, duration) => {
+const animation = (player, selector, className, duration) => {
   const elements = $$(selector);
   elements.forEach(el => el.classList.add(className))
 
-  setTimeout(() => {
+  state[player].toInvokeIfCleared.push(fire(() => {
     elements.forEach(el => el.classList.remove(className));
-  }, duration);
+  }, duration));
 };
 
 const takeDamage = (player, amount) => {
@@ -45,81 +56,69 @@ const takeDamage = (player, amount) => {
   }
 };
 
-// Prevent player from taking an action for a given period of time.
-const disableInput = (player, duration) => {
-  clearTimeout(state[player].inputTimeout);
-  state[player].disableInput = true;
-  state[player].delayingInput = false;
-
-  setTimeout(() => {
-    state[player].disableInput = false;
-  }, duration);
-};
-
 // Set player action for the passed duration.
 const setAction = (player, action, duration) => {
+  state[player].timeouts.forEach(t => clearTimeout(t));
+  state[player].toInvokeIfCleared.forEach(t => t.invoke());
+
+  state[player].timeouts.length = 0;
+  state[player].toInvokeIfCleared.length = 0;
+
   state[player].action = action;
 
-  setTimeout(() => {
+  state[player].timeouts.push(setTimeout(() => {
     state[player].action = '';
-  }, duration);
+  }, duration));
 };
 
 const duck = player => {
   const duration = 500;
-  disableInput(player, duration);
   setAction(player, 'duck', duration);
-  animation(`.${player} div`, 'duck', duration);
+  animation(player, `.${player} div`, 'duck', duration);
 };
 
 const dodgeLeft = player => {
   const duration = 350;
-  disableInput(player, duration);
   setAction(player, 'dodgeLeft', duration);
-  animation(`.${player} div`, 'dodgeLeft', duration);
+  animation(player, `.${player} div`, 'dodgeLeft', duration);
 };
 
 const dodgeRight = player => {
   const duration = 350;
-  disableInput(player, duration);
   setAction(player, 'dodgeRight', duration);
-  animation(`.${player} div`, 'dodgeRight', duration);
+  animation(player, `.${player} div`, 'dodgeRight', duration);
 };
 
 const stun = (player, duration) => {
-  disableInput(player, duration);
   setAction(player, 'stun', duration);
-  animation(`.${player} div`, 'shake', duration);
+  animation(player, `.${player} div`, 'shake', duration);
 };
 
 // Delay execution of the passed action until we're sure player isn't trying to press two keys simultaneously.
 const executeAfterComboKeysWindowPasses = (player, action) => {
-  if (state[player].delayingInput) {
+  if (state[player].inputDelayed) {
     // We already received this command.
     return;
   }
-  state[player].delayingInput = true;
+  state[player].inputDelayed = true;
   const execute = () => {
-    state[player].inputTimeout = undefined;
-    state[player].delayingInput = false;
+    state[player].inputDelayed = false;
     action();
   };
 
-  // If player doesn't press up within the timeout period, defend/jab.
-  clearTimeout(state[player].inputTimeout);
-  state[player].inputTimeout = setTimeout(execute, 35);
+  // If player doesn't press up/punch within the timeout period, defend/jab.
+  state[player].timeouts.push(setTimeout(execute, 35));
 };
 
 const defend = player => executeAfterComboKeysWindowPasses(player, () => {
   const duration = 500;
-  disableInput(player, duration);
   setAction(player, 'defend', duration);
-  animation(`.${player} .left.arm`, 'defendLeft', duration);
-  animation(`.${player} .right.arm`, 'defendRight', duration);
+  animation(player, `.${player} .left.arm`, 'defendLeft', duration);
+  animation(player, `.${player} .right.arm`, 'defendRight', duration);
 });
 
 const hit = (player, isUppercut = false) => {
-  animation(`.${player} .body`, 'nudgeDown', 250);
+  animation(player, `.${player} .body`, 'nudgeDown', 250);
 
   const action = state[player].action;
   if (action === 'defend') {
@@ -134,66 +133,62 @@ const hitDelay = 150; // Time in ms a player has to block/dodge an incoming atta
 
 const jabLeft = player => executeAfterComboKeysWindowPasses(player, () => {
   const duration = 500;
-  disableInput(player, duration);
   setAction(player, 'attack', duration);
-  animation(`.${player} .left`, 'jabLeft', duration);
-  animation(`.${player}`, 'attack', duration);
+  animation(player, `.${player} .left`, 'jabLeft', duration);
+  animation(player, `.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  setTimeout(() => {
+  state[player].timeouts.push(setTimeout(() => {
     if (state[opponent].action !== 'dodgeLeft') {
       hit(opponent);
     }
-  }, hitDelay);
+  }, hitDelay));
 });
 
 const jabRight = player => executeAfterComboKeysWindowPasses(player, () => {
   const duration = 500;
-  disableInput(player, duration);
   setAction(player, 'attack', duration);
-  animation(`.${player} .right`, 'jabRight', duration);
-  animation(`.${player}`, 'attack', duration);
+  animation(player, `.${player} .right`, 'jabRight', duration);
+  animation(player, `.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  setTimeout(() => {
+  state[player].timeouts.push(setTimeout(() => {
     if (state[opponent].action !== 'dodgeRight') {
       hit(opponent);
     }
-  }, hitDelay);
+  }, hitDelay));
 });
 
 const uppercutLeft = player => {
   const duration = 750;
-  disableInput(player, duration);
   setAction(player, 'attack', duration);
-  animation(`.${player} .body, .${player} .right.arm`, 'jump', duration);
-  animation(`.${player} .left.arm`, 'uppercutLeft', duration);
-  animation(`.${player}`, 'attack', duration);
+  animation(player, `.${player} .body, .${player} .right.arm`, 'jump', duration);
+  animation(player, `.${player} .left.arm`, 'uppercutLeft', duration);
+  animation(player, `.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  setTimeout(() => {
+  state[player].timeouts.push(setTimeout(() => {
     if (state[opponent].action !== 'dodgeLeft' && state[opponent].action !== 'duck') {
       const isUppercut = true;
       hit(opponent, isUppercut);
     }
-  }, hitDelay);
+  }, hitDelay));
 };
 
 const uppercutRight = player => {
   const duration = 750;
-  disableInput(player, duration);
   setAction(player, 'attack', duration);
-  animation(`.${player} .body, .${player} .left.arm`, 'jump', duration);
-  animation(`.${player} .right.arm`, 'uppercutRight', duration);
-  animation(`.${player}`, 'attack', duration);
+  animation(player, `.${player} .body, .${player} .left.arm`, 'jump', duration);
+  animation(player, `.${player} .right.arm`, 'uppercutRight', duration);
+  animation(player, `.${player}`, 'attack', duration);
 
   const opponent = player === 'one' ? 'two' : 'one';
-  setTimeout(() => {
+  state[player].timeouts.push(setTimeout(() => {
     if (state[opponent].action !== 'dodgeRight' && state[opponent].action !== 'duck') {
       const isUppercut = true;
       hit(opponent, isUppercut);
     }
-  }, hitDelay);
+  }, hitDelay));
 };
 
 // Keyboard controls.
@@ -201,7 +196,7 @@ const applyKeys = () => {
   keyMap.Enter ? reset() : null;
 
   // Controls for player one.
-  if (!state.one.disableInput) {
+  if (state.one.action === '') {
     keyMap.f && keyMap.w ? uppercutLeft('one')
     : keyMap.g && keyMap.w ? uppercutRight('one')
     : keyMap.w ? defend('one')
@@ -214,7 +209,7 @@ const applyKeys = () => {
   }
 
   // Controls for player two.
-  if (!state.two.disableInput) {
+  if (state.two.action === '') {
     keyMap[`;`] && keyMap.i ? uppercutLeft('two')
     : keyMap[`'`] && keyMap.i ? uppercutRight('two')
     : keyMap.i ? defend('two')
