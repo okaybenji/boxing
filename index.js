@@ -1,6 +1,6 @@
 const $ = query => document.querySelector(query);
 const $$ = query => document.querySelectorAll(query);
-const keyMap = {};
+const keyMap = {}; // State of keyboard.
 const state = {
   one: {
     health: 75,
@@ -36,12 +36,13 @@ const reset = () => {
 };
 
 const animation = (player, selector, className, duration) => {
+  const transitionDuration = 150; // Duration of CSS transitions in MS.
   const elements = $$(selector);
   elements.forEach(el => el.classList.add(className))
 
   state[player].toInvokeIfCleared.push(fire(() => {
     elements.forEach(el => el.classList.remove(className));
-  }, duration));
+  }, duration - transitionDuration));
 };
 
 const takeDamage = (player, amount) => {
