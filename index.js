@@ -19,6 +19,11 @@ const state = {
   }
 };
 
+// Reload page w/o POST.
+const reset = () => {
+  window.location = window.location;
+};
+
 const animation = (selector, className, duration) => {
   const elements = $$(selector);
   elements.forEach(el => el.classList.add(className))
@@ -193,6 +198,8 @@ const uppercutRight = player => {
 
 // Keyboard controls.
 const applyKeys = () => {
+  keyMap.Enter ? reset() : null;
+
   // Controls for player one.
   if (!state.one.disableInput) {
     keyMap.f && keyMap.w ? uppercutLeft('one')
@@ -274,7 +281,7 @@ const commandToKey = {
     dodgeRight: `l`,
     punchLeft: `;`,
     punchRight: `'`,
-  }
+  },
 };
 
 // Set whether button is pressed or not.
@@ -318,4 +325,9 @@ gamepad.on('release', ['stick_axis_left', 'stick_axis_right'], e => {
   updateButton(Object.assign(e, {button: 'd_pad_right'}), false);
   updateButton(Object.assign(e, {button: 'd_pad_up'}), false);
   updateButton(Object.assign(e, {button: 'd_pad_down'}), false);
+});
+
+// Allow resetting the game.
+gamepad.on('release', ['select', 'start', 'vendor'], e => {
+  reset();
 });
