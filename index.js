@@ -65,6 +65,7 @@ const setAction = (player, action, duration) => {
   state[player].timeouts.length = 0;
   state[player].toInvokeIfCleared.length = 0;
 
+  state[player].inputDelayed = false;
   state[player].action = action;
 
   state[player].timeouts.push(setTimeout(() => {
