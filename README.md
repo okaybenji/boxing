@@ -1,4 +1,4 @@
-# boxing
+# Boxing!!
 2-player local punch-out-style boxing
 
 *work in progress!*
